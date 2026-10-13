@@ -181,9 +181,22 @@ const firebaseConfig = {
 // Tambahkan lagu sendiri di sini. Contoh format (hapus // untuk mengaktifkan):
 // { title: "Judul Lagu", artist: "Nama Artis", icon: "🎵", url: "lagu.mp3" }
 // Jika file MP3 ada di folder yang sama dengan HTML, gunakan nama file seperti "lagu.mp3".
+
 const localSongs = [
-  { title: "Creep", artist: "Radiohead", icon: "🎵", url: "Radiohead - Creep (SPOTISAVER).mp3" }
+  {
+    title: "Creep",
+    artist: "Radiohead",
+    icon: "🎵",
+    url: "Radiohead - Creep (SPOTISAVER).mp3"
+  },
+  {
+    title: "Judul Lagu Kedua",
+    artist: "Nama Artis Kedua",
+    icon: "🎵",
+    url: "nama-file-lagu-kedua.mp3"
+  }
 ];
+
 let songs = [...localSongs];
 let filteredSongs = [...songs];
 let currentIndex = 0;
