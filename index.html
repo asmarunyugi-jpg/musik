@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -21,6 +20,14 @@ header{
   background:#191932;
   font-size:24px;
   font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:500px;
+  margin:0 auto;
+}
+.header-title{
+  margin: auto;
 }
 .container{
   max-width:500px;
@@ -56,7 +63,7 @@ header{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:24px;
+  gap:16px;
   margin:25px 0;
 }
 button{
@@ -67,15 +74,23 @@ button{
 .control{
   background:#292943;
   border-radius:50%;
-  width:48px;
-  height:48px;
-  font-size:20px;
+  width:44px;
+  height:44px;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.2s ease;
+}
+.control.active{
+  background:#9c69ff;
+  box-shadow:0 0 10px #9c69ff88;
 }
 .main{
   background:#9c69ff;
-  width:66px;
-  height:66px;
-  font-size:27px;
+  width:60px;
+  height:60px;
+  font-size:24px;
 }
 .section-title{margin-top:30px}
 .song{
@@ -102,14 +117,34 @@ button{
 }
 .volume input{flex:1;accent-color:#a77bff}
 [hidden]{display:none!important}
-.auth-panel{background:#1c1c33;border-radius:16px;padding:16px;margin:16px 0;display:grid;gap:10px}
-.auth-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* Panel Login & Halaman Akses Masuk */
+.auth-wrapper {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #1c1c33;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.auth-wrapper h2 {
+  margin-top: 0;
+  color: #a77bff;
+}
+.auth-panel{
+  display:grid;
+  gap:14px;
+  text-align: left;
+}
+.auth-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
 .auth-panel input{width:100%;padding:12px;border:1px solid #454563;border-radius:10px;background:#101020;color:white;font-size:16px}
 .auth-panel label{font-size:13px;color:#ddd;margin-bottom:-6px}
-#registerBtn,#loginBtn,#logout{padding:12px 15px;border-radius:10px;font-weight:bold;background:#9c69ff}
-#logout{background:#39305a}
-.auth-note{color:#aaa;line-height:1.5}
-#userInfo{font-size:13px;color:#ddd;overflow-wrap:anywhere}
+#registerBtn,#loginBtn,#logout{padding:12px 15px;border-radius:10px;font-weight:bold;background:#9c69ff;flex:1}
+#logout{background:#39305a;padding:8px 12px;font-size:12px}
+.auth-note{color:#aaa;line-height:1.5;font-size:12px}
+#userInfo{font-size:14px;color:#ddd;margin-bottom:15px;text-align:center}
+
 .search-wrap{margin:20px 0}
 #searchInput{width:100%;padding:14px;border:1px solid #454563;border-radius:12px;background:#1c1c33;color:white;font-size:16px;outline:none}
 #searchInput:focus{border-color:#a77bff}
@@ -129,65 +164,76 @@ button{
 </head>
 
 <body>
-<header>🎵 MusikKu</header>
+<header>
+  <span class="header-title">🎵 MusikKu</span>
+  <button id="logout" type="button" hidden>Keluar</button>
+</header>
 
 <main class="container">
-  <section class="auth-panel" aria-label="Akun MusikKu">
-    <strong>🎵 Akun MusikKu</strong>
-    <div id="userInfo">Daftar akun baru atau masuk dengan nama dan sandi.</div>
-    <label for="accountName">Nama akun</label>
-    <input id="accountName" type="text" maxlength="30" autocomplete="username" placeholder="Masukkan nama akun" required>
-    <label for="accountPassword">Sandi</label>
-    <input id="accountPassword" type="password" minlength="6" autocomplete="current-password" placeholder="Minimal 6 karakter" required>
-    <div class="auth-row" id="authActions">
-      <button id="registerBtn" type="button">📝 Daftar</button>
-      <button id="loginBtn" type="button">🔑 Masuk</button>
+  <!-- TAMPILAN AWAL: LOGIN / DAFTAR -->
+  <div id="authSection" class="auth-wrapper">
+    <h2>Selamat Datang</h2>
+    <div id="userInfo">Silakan masuk dengan email dan kata sandi Anda untuk melanjutkan.</div>
+    <form class="auth-panel" onsubmit="return false;">
+      <label for="accountEmail">Email akun</label>
+      <input id="accountEmail" type="email" autocomplete="email" placeholder="Masukkan email akun" required>
+      
+      <label for="accountPassword">Sandi</label>
+      <input id="accountPassword" type="password" minlength="6" autocomplete="current-password" placeholder="Minimal 6 karakter" required>
+      
+      <div class="auth-row" id="authActions">
+        <button id="loginBtn" type="button">🔑 Masuk</button>
+        <button id="registerBtn" type="button">📝 Daftar</button>
+      </div>
+      <p class="auth-note">Gunakan email yang valid dan kata sandi minimal 6 karakter.</p>
+    </form>
+  </div>
+
+  <!-- TAMPILAN PEMUTAR MUSIK (DISEMBUNYIKAN SEBELUM LOGIN) -->
+  <div id="musicPlayerSection" hidden>
+    <div class="cover" id="cover">🎧</div>
+
+    <div class="info">
+      <h2 id="title">Pilih Lagu</h2>
+      <p id="artist">Musik favoritmu</p>
     </div>
-    <div class="auth-row">
-      <button id="logout" type="button" hidden>Keluar</button>
+
+    <audio id="audio" preload="metadata"></audio>
+
+    <input class="progress" id="progress"
+           type="range" min="0" max="1000" value="0">
+
+    <div class="times">
+      <span id="current">0:00</span>
+      <span id="duration">0:00</span>
     </div>
-    <small class="auth-note">Akun disimpan melalui Firebase Authentication agar bisa digunakan di perangkat lain. Nama akun dipakai untuk masuk; gunakan nama dan sandi yang sama.</small>
-  </section>
-  <div class="cover" id="cover">🎧</div>
 
-  <div class="info">
-    <h2 id="title">Pilih Lagu</h2>
-    <p id="artist">Musik favoritmu</p>
+    <div class="controls">
+      <button class="control" id="shuffle" aria-label="Putar acak" title="Putar Acak">🔀</button>
+      <button class="control" id="prev" aria-label="Lagu sebelumnya">⏮</button>
+      <button class="control main" id="play" aria-label="Putar">▶</button>
+      <button class="control" id="next" aria-label="Lagu berikutnya">⏭</button>
+      <button class="control" id="repeat" aria-label="Putar ulang" title="Putar Ulang Mode: Matikan">🔁</button>
+    </div>
+
+    <div class="volume">
+      <span>🔉</span>
+      <input id="volume" type="range"
+             min="0" max="1" step="0.01" value="0.8">
+      <span>🔊</span>
+    </div>
+
+    <h3 class="section-title">Daftar Lagu</h3>
+    <div class="search-wrap">
+      <input id="searchInput" type="search" placeholder="Cari judul lagu atau nama artis..." aria-label="Cari lagu" autocomplete="off">
+    </div>
+    <div id="playlist"></div>
+    <p id="firebaseStatus" class="note" role="status">Menyiapkan daftar lagu...</p>
+
+    <p class="note">
+      Lagu lokal ditambahkan pada bagian <code>localSongs</code> di HTML. Lagu tambahan dari Firestore harus memiliki URL MP3 yang bisa diakses dan field <code>active: true</code>.
+    </p>
   </div>
-
-  <audio id="audio" preload="metadata"></audio>
-
-  <input class="progress" id="progress"
-         type="range" min="0" max="1000" value="0">
-
-  <div class="times">
-    <span id="current">0:00</span>
-    <span id="duration">0:00</span>
-  </div>
-
-  <div class="controls">
-    <button class="control" id="prev" aria-label="Lagu sebelumnya">⏮</button>
-    <button class="control main" id="play" aria-label="Putar">▶</button>
-    <button class="control" id="next" aria-label="Lagu berikutnya">⏭</button>
-  </div>
-
-  <div class="volume">
-    <span>🔉</span>
-    <input id="volume" type="range"
-           min="0" max="1" step="0.01" value="0.8">
-    <span>🔊</span>
-  </div>
-
-  <h3 class="section-title">Daftar Lagu</h3>
-  <div class="search-wrap">
-    <input id="searchInput" type="search" placeholder="Cari judul lagu atau nama artis..." aria-label="Cari lagu" autocomplete="off">
-  </div>
-  <div id="playlist"></div>
-  <p id="firebaseStatus" class="note" role="status">Menyiapkan daftar lagu...</p>
-
-  <p class="note">
-    Lagu lokal ditambahkan pada bagian <code>localSongs</code> di HTML. Lagu tambahan dari Firestore harus memiliki URL MP3 yang bisa diakses dan field <code>active: true</code>.
-  </p>
 </main>
 
 <!-- Firebase SDK: Authentication dan Firestore -->
@@ -195,8 +241,6 @@ button{
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script>
-// PENTING: ambil konfigurasi dari Firebase Console > Project settings > Your apps > Web app.
-// App ID Android tidak bisa digunakan sebagai pengganti App ID Web.
 const firebaseConfig = {
   apiKey: "AIzaSyBdX2EfurqqNyt3FSXqRijqf1GAEiN87l4",
   authDomain: "musik-reft-id.firebaseapp.com",
@@ -206,9 +250,6 @@ const firebaseConfig = {
   appId: "1:602235474628:web:60060ffeaa9536922b2f91"
 };
 
-// Tambahkan lagu sendiri di sini. Contoh format (hapus // untuk mengaktifkan):
-// { title: "Judul Lagu", artist: "Nama Artis", icon: "🎵", url: "lagu.mp3" }
-// Jika file MP3 ada di folder yang sama dengan HTML, gunakan nama file seperti "lagu.mp3".
 const localSongs = [
   {
     title: "Creep",
@@ -229,19 +270,23 @@ const localSongs = [
     url: "https://raw.githubusercontent.com/asmarunyugi-jpg/musik/bcd921fa49551c7bb6960123226eb8e7d0a7cfd1/Nadin%20Amizah%20-%20Berpayung%20Tuhan%20(SPOTISAVER).mp3"
   }
 ];
+
 let songs = [...localSongs];
 let filteredSongs = [...songs];
 let currentIndex = 0;
 let seeking = false;
+let isShuffle = false;
+let repeatMode = 0; // 0: Nonaktif, 1: Ulang Semua, 2: Ulang Satu Lagu
+
 let db = null;
 let auth = null;
 let currentUser = null;
-const GUEST_STORAGE_KEY = "musikku_guest_accounts_v1";
 
 function setFirebaseStatus(message) {
   const status = document.getElementById("firebaseStatus");
   if (status) status.textContent = message;
 }
+
 function isFirebaseConfigFilled() {
   return [firebaseConfig.apiKey, firebaseConfig.authDomain, firebaseConfig.projectId,
     firebaseConfig.messagingSenderId, firebaseConfig.appId].every(value =>
@@ -251,23 +296,18 @@ function isFirebaseConfigFilled() {
 
 function showUser(user) {
   currentUser = user;
-  const info = document.getElementById("userInfo");
-  const authActions = document.getElementById("authActions");
+  const authSection = document.getElementById("authSection");
+  const musicPlayerSection = document.getElementById("musicPlayerSection");
   const logout = document.getElementById("logout");
-  const accountName = document.getElementById("accountName");
-  const accountPassword = document.getElementById("accountPassword");
+
   if (user) {
-    info.textContent = "Masuk sebagai: " + (user.displayName || user.email || "Guest");
-    authActions.hidden = true;
-    accountName.hidden = true;
-    accountPassword.hidden = true;
+    authSection.hidden = true;
+    musicPlayerSection.hidden = false;
     logout.hidden = false;
     loadSongsFromFirebase();
   } else {
-    info.textContent = "Daftar akun baru atau masuk dengan nama dan sandi.";
-    authActions.hidden = false;
-    accountName.hidden = false;
-    accountPassword.hidden = false;
+    authSection.hidden = false;
+    musicPlayerSection.hidden = true;
     logout.hidden = true;
     songs = [...localSongs];
     filteredSongs = [...songs];
@@ -278,8 +318,6 @@ function showUser(user) {
     document.getElementById("title").textContent = "Pilih Lagu";
     document.getElementById("artist").textContent = "Musik favoritmu";
     document.getElementById("cover").textContent = "🎧";
-    renderPlaylist();
-    setFirebaseStatus("Masuk ke akun guest untuk memuat daftar lagu.");
   }
 }
 
@@ -326,6 +364,8 @@ const audio = document.getElementById("audio");
 const playButton = document.getElementById("play");
 const progress = document.getElementById("progress");
 const playlist = document.getElementById("playlist");
+const shuffleBtn = document.getElementById("shuffle");
+const repeatBtn = document.getElementById("repeat");
 
 function formatTime(seconds) {
   if (!Number.isFinite(seconds)) return "0:00";
@@ -402,6 +442,60 @@ function loadSong(index, autoplay = false) {
   }
 }
 
+function getRandomIndex() {
+  if (songs.length <= 1) return 0;
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * songs.length);
+  } while (newIndex === currentIndex);
+  return newIndex;
+}
+
+function playNextSong() {
+  if (repeatMode === 2) {
+    loadSong(currentIndex, true);
+  } else if (isShuffle) {
+    loadSong(getRandomIndex(), true);
+  } else {
+    if (currentIndex === songs.length - 1 && repeatMode === 0) {
+      audio.pause();
+      audio.currentTime = 0;
+    } else {
+      loadSong(currentIndex + 1, true);
+    }
+  }
+}
+
+function playPrevSong() {
+  if (isShuffle) {
+    loadSong(getRandomIndex(), true);
+  } else {
+    loadSong(currentIndex - 1, true);
+  }
+}
+
+shuffleBtn.addEventListener("click", () => {
+  isShuffle = !isShuffle;
+  shuffleBtn.classList.toggle("active", isShuffle);
+});
+
+repeatBtn.addEventListener("click", () => {
+  repeatMode = (repeatMode + 1) % 3;
+  if (repeatMode === 0) {
+    repeatBtn.textContent = "🔁";
+    repeatBtn.classList.remove("active");
+    repeatBtn.title = "Putar Ulang Mode: Matikan";
+  } else if (repeatMode === 1) {
+    repeatBtn.textContent = "🔁";
+    repeatBtn.classList.add("active");
+    repeatBtn.title = "Putar Ulang Mode: Semua Lagu";
+  } else if (repeatMode === 2) {
+    repeatBtn.textContent = "🔂";
+    repeatBtn.classList.add("active");
+    repeatBtn.title = "Putar Ulang Mode: Satu Lagu";
+  }
+});
+
 function updateMediaSession() {
   if (!("mediaSession" in navigator)) return;
 
@@ -416,12 +510,8 @@ function updateMediaSession() {
 
     navigator.mediaSession.setActionHandler("play", () => audio.play());
     navigator.mediaSession.setActionHandler("pause", () => audio.pause());
-    navigator.mediaSession.setActionHandler("previoustrack", () => {
-      loadSong(currentIndex - 1, true);
-    });
-    navigator.mediaSession.setActionHandler("nexttrack", () => {
-      loadSong(currentIndex + 1, true);
-    });
+    navigator.mediaSession.setActionHandler("previoustrack", () => playPrevSong());
+    navigator.mediaSession.setActionHandler("nexttrack", () => playNextSong());
     navigator.mediaSession.setActionHandler("seekto", details => {
       if (Number.isFinite(details.seekTime)) {
         audio.currentTime = details.seekTime;
@@ -443,13 +533,8 @@ playButton.addEventListener("click", () => {
   }
 });
 
-document.getElementById("prev").addEventListener("click", () => {
-  loadSong(currentIndex - 1, true);
-});
-
-document.getElementById("next").addEventListener("click", () => {
-  loadSong(currentIndex + 1, true);
-});
+document.getElementById("prev").addEventListener("click", playPrevSong);
+document.getElementById("next").addEventListener("click", playNextSong);
 
 document.getElementById("volume").addEventListener("input", event => {
   audio.volume = Number(event.target.value);
@@ -474,8 +559,7 @@ audio.addEventListener("pause", () => {
 });
 
 audio.addEventListener("loadedmetadata", () => {
-  document.getElementById("duration").textContent =
-    formatTime(audio.duration);
+  document.getElementById("duration").textContent = formatTime(audio.duration);
 });
 
 audio.addEventListener("timeupdate", () => {
@@ -483,8 +567,7 @@ audio.addEventListener("timeupdate", () => {
     progress.value = audio.currentTime / audio.duration * 1000;
   }
 
-  document.getElementById("current").textContent =
-    formatTime(audio.currentTime);
+  document.getElementById("current").textContent = formatTime(audio.currentTime);
 });
 
 progress.addEventListener("input", () => {
@@ -498,9 +581,7 @@ progress.addEventListener("change", () => {
   seeking = false;
 });
 
-audio.addEventListener("ended", () => {
-  loadSong(currentIndex + 1, true);
-});
+audio.addEventListener("ended", playNextSong);
 
 audio.addEventListener("error", () => {
   playButton.textContent = "▶";
@@ -508,62 +589,45 @@ audio.addEventListener("error", () => {
 
 document.getElementById("searchInput").addEventListener("input", renderPlaylist);
 
-function normalizeGuestName(name) {
-  return String(name || "").trim().replace(/\s+/g, " ");
-}
-// Firebase Authentication email/password requires an email-shaped identifier.
-// The app creates a consistent internal address from the username, so users can
-// register/sign in with the same username + password on other devices.
-function usernameToEmail(name) {
-  const normalized = normalizeGuestName(name).toLowerCase();
-  const slug = normalized.normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9._-]/g, "");
-  if (slug.length < 3) throw new Error("Nama akun harus memiliki minimal 3 huruf/angka yang bisa digunakan.");
-  return slug + "@guest.musikku.app";
-}
-
 document.getElementById("registerBtn").addEventListener("click", async () => {
-  const name = normalizeGuestName(document.getElementById("accountName").value);
+  const email = document.getElementById("accountEmail").value.trim();
   const password = document.getElementById("accountPassword").value;
-  if (name.length < 3) { alert("Nama akun minimal 3 karakter."); return; }
+  if (!email) { alert("Masukkan email akun Anda."); return; }
   if (password.length < 6) { alert("Sandi minimal 6 karakter."); return; }
-  if (!auth) { alert("Firebase belum siap. Periksa konfigurasi Firebase dan aktifkan metode Email/Password di Firebase Console."); return; }
+  if (!auth) { alert("Firebase belum siap. Periksa konfigurasi Firebase."); return; }
   try {
-    const credential = await auth.createUserWithEmailAndPassword(usernameToEmail(name), password);
-    await credential.user.updateProfile({ displayName: name });
+    const credential = await auth.createUserWithEmailAndPassword(email, password);
     document.getElementById("accountPassword").value = "";
     showUser(credential.user);
-    alert("Pendaftaran berhasil. Akun ini bisa digunakan di perangkat lain dengan nama dan sandi yang sama.");
+    alert("Pendaftaran berhasil.");
   } catch (error) {
     console.error("Pendaftaran gagal:", error);
     const messages = {
-      "auth/email-already-in-use": "Nama akun ini sudah terdaftar. Silakan pilih nama lain atau tekan Masuk.",
+      "auth/email-already-in-use": "Email ini sudah terdaftar. Silakan tekan Masuk.",
+      "auth/invalid-email": "Format email tidak valid.",
       "auth/weak-password": "Sandi terlalu lemah. Gunakan minimal 6 karakter.",
-      "auth/operation-not-allowed": "Aktifkan Email/Password di Firebase Console > Authentication > Sign-in method.",
-      "auth/invalid-api-key": "API Key Firebase tidak valid. Periksa konfigurasi aplikasi Web."
+      "auth/operation-not-allowed": "Aktifkan Email/Password di Firebase Console."
     };
     alert(messages[error.code] || ("Pendaftaran gagal: " + error.message));
   }
 });
 
 document.getElementById("loginBtn").addEventListener("click", async () => {
-  const name = normalizeGuestName(document.getElementById("accountName").value);
+  const email = document.getElementById("accountEmail").value.trim();
   const password = document.getElementById("accountPassword").value;
-  if (!name || !password) { alert("Isi nama akun dan sandi."); return; }
-  if (!auth) { alert("Firebase belum siap. Periksa konfigurasi Firebase dan aktifkan metode Email/Password di Firebase Console."); return; }
+  if (!email || !password) { alert("Isi email akun dan sandi."); return; }
+  if (!auth) { alert("Firebase belum siap. Periksa konfigurasi Firebase."); return; }
   try {
-    const credential = await auth.signInWithEmailAndPassword(usernameToEmail(name), password);
+    const credential = await auth.signInWithEmailAndPassword(email, password);
     document.getElementById("accountPassword").value = "";
     showUser(credential.user);
   } catch (error) {
     console.error("Login gagal:", error);
     const messages = {
       "auth/user-not-found": "Akun tidak ditemukan. Tekan Daftar terlebih dahulu.",
-      "auth/wrong-password": "Nama akun atau sandi salah.",
-      "auth/invalid-credential": "Nama akun atau sandi salah, atau akun belum terdaftar.",
-      "auth/operation-not-allowed": "Aktifkan Email/Password di Firebase Console > Authentication > Sign-in method.",
-      "auth/invalid-api-key": "API Key Firebase tidak valid. Periksa konfigurasi aplikasi Web."
+      "auth/wrong-password": "Email akun atau sandi salah.",
+      "auth/invalid-credential": "Email akun atau sandi salah.",
+      "auth/invalid-email": "Format email tidak valid."
     };
     alert(messages[error.code] || ("Gagal masuk: " + error.message));
   }
@@ -574,7 +638,6 @@ document.getElementById("logout").addEventListener("click", async () => {
   catch (error) { alert("Gagal keluar: " + error.message); }
 });
 
-// Firebase Authentication + Firestore. Aktifkan Email/Password di Firebase Console.
 if (isFirebaseConfigFilled()) {
   try {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -584,24 +647,14 @@ if (isFirebaseConfigFilled()) {
       console.error("Tidak bisa menyimpan sesi masuk:", error);
     });
     auth.onAuthStateChanged(user => {
-      if (user) showUser(user);
-      else {
-        showUser(null);
-        // Lagu yang ditulis langsung di HTML tetap terlihat walau belum login.
-        songs = [...localSongs];
-        filteredSongs = [...songs];
-        renderPlaylist();
-        setFirebaseStatus("Siap diputar. Masuk untuk memuat lagu dari akun/Firestore.");
-      }
+      showUser(user);
     });
   } catch (error) {
     console.error("Firebase belum siap:", error);
     showUser(null);
-    setFirebaseStatus("Firebase gagal dimulai. Periksa konfigurasi Firebase.");
   }
 } else {
   showUser(null);
-  setFirebaseStatus("Konfigurasi Firebase Web belum lengkap.");
 }
 </script>
 
